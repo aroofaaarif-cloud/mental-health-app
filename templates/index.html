@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MindCare</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            background: #eaeaea;
+        }
+
+        .phone {
+            width: 360px;
+            height: 640px;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #6C63FF;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 20px;
+        }
+
+        .content {
+            padding: 15px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            height: 80px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #6C63FF;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        .entry {
+            background: #f5f5f5;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        /* Breathing circle */
+        .breathing {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: auto;
+            background: #6C63FF;
+            transition: transform 4s ease-in-out;
+        }
+
+        .text {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="phone">
+
+    <div class="header">🌿 MindCare</div>
+
+    <div class="content">
+
+        <form action="/add" method="post">
+            <select name="mood">
+                <option value="happy">😊 Happy</option>
+                <option value="neutral">😐 Neutral</option>
+                <option value="sad">😔 Sad</option>
+                <option value="angry">😡 Angry</option>
+            </select>
+
+            <textarea name="note" placeholder="How are you feeling today?"></textarea>
+
+            <button class="btn">Save Entry</button>
+        </form>
+
+        <!-- Interactive Breathing Tool -->
+        <div class="breathing">
+            <button class="btn" onclick="startBreathing()">Start Breathing Exercise</button>
+
+            <div class="circle" id="circle"></div>
+            <div class="text" id="breathText">Press button to begin</div>
+        </div>
+
+        <h3>Your Entries</h3>
+
+        {% for entry in entries %}
+            <div class="entry">
+                <p><b>{{ entry.mood }}</b></p>
+                <p>{{ entry.note }}</p>
+                <p><i>{{ entry.message }}</i></p>
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<script>
+let breathing = false;
+
+function startBreathing() {
+    breathing = !breathing;
+
+    const circle = document.getElementById("circle");
+    const text = document.getElementById("breathText");
+
+    if (breathing) {
+        text.innerText = "Inhale...";
+        breatheCycle(circle, text);
+    } else {
+        text.innerText = "Stopped";
+        circle.style.transform = "scale(1)";
+    }
+}
+
+function breatheCycle(circle, text) {
+    if (!breathing) return;
+
+    circle.style.transform = "scale(1.5)";
+    text.innerText = "Inhale...";
+    
+    setTimeout(() => {
+        circle.style.transform = "scale(1)";
+        text.innerText = "Exhale...";
+    }, 4000);
+
+    setTimeout(() => {
+        breatheCycle(circle, text);
+    }, 8000);
+}
+</script>
+
+</body>
+</html>
